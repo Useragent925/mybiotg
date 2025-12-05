@@ -1,0 +1,763 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Личная биография" />
+  <title>Биография Anarch1st</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome (icons) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <style>
+    .bio-item {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* расстояние между иконкой и текстом */
+  font-family: 'Roboto Mono', monospace;
+  color: #E0E0E0;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+.bio-item i {
+  color: #00FF00; /* зеленый радиационный оттенок */
+  font-size: 1rem;
+  opacity: 0.9;
+  transition: 0.3s;
+}
+
+.bio-item i:hover {
+  color: #FF9900; /* при наведении — эффект аномалии */
+  transform: scale(1.1);
+}
+
+    :root{
+      --bg-1: #0A192F; /* or #2E2E2E */
+      --text: #E0E0E0;
+      --muted: #A8A8A8;
+      --accent-green: #00FF00;
+      --accent-orange: #FF9900;
+      --card-bg: rgba(10,15,20,0.45);
+      --glass-border: rgba(255,255,255,0.04);
+      --radius: 12px;
+      --max-width: 1100px;
+      --font-mono: 'Roboto Mono', 'Courier New', monospace;
+      --font-sans: 'Oswald', system-ui, sans-serif;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:var(--font-mono);
+      background:var(--bg-1) fixed no-repeat center/cover;
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.4;
+      overflow-y:scroll;
+    }
+
+    /* ===================
+       Background overlay image (semi-transparent)
+       Replace the URL below with your royalty-free S.T.A.L.K.E.R.-like image.
+       Example: https://example.com/stalker-bg.jpg
+       =================== */
+    body::before{
+      content:'';
+      position:fixed;
+      inset:0;
+      background-image: url('https://tseret.b-cdn.net/wp-content/uploads/2021/07/Chernobylite-heist-guide-no-deaths-important-choices-decisions-companions-roles-.jpg');
+      background-size:cover;
+      background-position:center;
+      opacity:.38; /* 0.3-0.5 as requested */
+      z-index:0;
+      pointer-events:none;
+      mix-blend-mode:screen;
+      backdrop-filter: blur(1px);
+      /* fixed already via body background-attachment: fixed effect */
+    }
+
+    /* Parallax subtle movement */
+    @media (prefers-reduced-motion: no-preference) {
+      body::before{
+        transform: translateY(0);
+        transition: transform 0.6s linear;
+      }
+      /* small parallax via JS on scroll */
+    }
+
+    /* Canvas for particles - sits above background but behind UI */
+    #particle-canvas{
+      position:fixed;
+      inset:0;
+      z-index:1;
+      pointer-events:none;
+    }
+
+    /* ===================
+       Layout
+       =================== */
+    .wrap{
+      position:relative;
+      z-index:2; /* above background and particles */
+      max-width:var(--max-width);
+      margin:40px auto;
+      padding:28px;
+      display:grid;
+      gap:20px;
+    }
+
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:18px;
+      border-radius:var(--radius);
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border:1px solid var(--glass-border);
+      box-shadow: 0 6px 30px rgba(2,6,10,0.6);
+      backdrop-filter: blur(6px);
+    }
+    .brand{
+      display:flex;
+      gap:14px;
+      align-items:center;
+    }
+    .logo{
+      width:56px;
+      height:56px;
+      border-radius:10px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg, rgba(0,0,0,0.35), rgba(255,255,255,0.02));
+      border:1px solid rgba(255,255,255,0.04);
+      font-family:var(--font-sans);
+      font-weight:700;
+      letter-spacing:1px;
+      color:var(--accent-green);
+      box-shadow: 0 0 18px rgba(0,255,0,0.05) inset;
+    }
+    .title{
+      font-family:var(--font-sans);
+      font-size:1.2rem;
+      letter-spacing:0.6px;
+      color:var(--text);
+    }
+    .sub{
+      color:var(--muted);
+      font-size:0.9rem;
+    }
+
+    /* Main grid */
+    main{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:20px;
+      align-items:start;
+    }
+
+    .card{
+      padding:18px;
+      border-radius:12px;
+      background: linear-gradient(180deg, rgba(10,12,15,0.55), rgba(6,8,10,0.35));
+      border:1px solid var(--glass-border);
+      box-shadow: 0 8px 30px rgba(2,6,10,0.6);
+    }
+
+    /* Bio grid */
+    .bio-grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:12px;
+    }
+    .field{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      padding:10px;
+      border-radius:8px;
+      transition:transform .18s ease, box-shadow .18s ease;
+      background: rgba(255,255,255,0.01);
+    }
+    .field:hover{
+      transform: translateY(-4px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+    }
+    .icon{
+      width:40px;
+      height:40px;
+      display:grid;
+      place-items:center;
+      background: rgba(255,255,255,0.02);
+      border-radius:8px;
+      font-size:1.05rem;
+      color:var(--accent-green);
+    }
+    .meta{
+      display:flex;
+      flex-direction:column;
+    }
+    .meta .label{
+      font-size:.78rem;
+      color:var(--muted);
+      font-weight:600;
+      letter-spacing:0.6px;
+    }
+    .meta .value{
+      font-size:1rem;
+      color:var(--text);
+      word-break:break-word;
+    }
+
+    /* Socials */
+    .socials{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .s-btn{
+      position:relative;
+      display:inline-grid;
+      place-items:center;
+      width:46px;
+      height:46px;
+      border-radius:8px;
+      background:rgba(255,255,255,0.02);
+      border:1px solid rgba(255,255,255,0.03);
+      cursor:pointer;
+      overflow:hidden;
+      transition: transform .18s cubic-bezier(.2,.9,.3,1), box-shadow .18s ease;
+    }
+    .s-btn i{ font-size:1.05rem; color:var(--text); }
+    .s-btn:hover{
+      transform:scale(1.08);
+      box-shadow: 0 0 18px rgba(0,255,0,0.12);
+    }
+    .s-btn.green:hover{
+      box-shadow: 0 0 20px rgba(0,255,0,0.18);
+    }
+    .s-btn.orange:hover{
+      box-shadow: 0 0 20px rgba(255,153,0,0.16);
+    }
+
+    /* Footer */
+    footer{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      padding:12px 18px;
+      border-radius:10px;
+      background:transparent;
+      color:var(--muted);
+      font-size:0.88rem;
+    }
+
+    /* Responsive: grid columns for desktop */
+    @media(min-width:900px){
+      main{ grid-template-columns: 2fr 1fr; align-items:start; }
+      .bio-grid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .wrap{ margin:60px auto; padding:32px; }
+    }
+
+    /* Header controls on small screens */
+    @media(max-width:420px){
+      .logo{ width:48px; height:48px; font-size:.95rem }
+      header{ padding:12px; gap:8px }
+      .title{ font-size:1rem }
+    }
+
+    /* Buttons and typography */
+    .btn-primary{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      padding:10px 14px;
+      border-radius:8px;
+      background:linear-gradient(90deg,var(--accent-green), #88ff88);
+      color:#041014;
+      font-weight:700;
+      border:none;
+      cursor:pointer;
+      text-decoration:none;
+      box-shadow: 0 8px 30px rgba(0,255,0,0.06);
+      transition: transform .15s ease;
+    }
+    .btn-primary:hover{ transform:translateY(-3px) }
+
+    /* subtle headings */
+    h2.title-card{
+      font-family:var(--font-sans);
+      font-size:1.02rem;
+      margin:0 0 8px 0;
+      letter-spacing:0.6px;
+    }
+    p.lead{ color:var(--muted); margin:0 0 12px 0; font-size:.95rem }
+
+    /* Fade-in animation classes (applied by JS) */
+    .reveal{ opacity:0; transform: translateY(8px); }
+    .reveal.visible{ opacity:1; transform: translateY(0); transition: all .9s cubic-bezier(.2,.9,.3,1); }
+
+    /* accessibility: reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      .reveal{ transition:none !important; transform:none !important; opacity:1 !important; }
+      .s-btn{ transition:none !important; transform:none !important; box-shadow:none !important; }
+    }
+
+    /* small utility */
+    .muted{ color:var(--muted) }
+
+    .setup {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(0, 255, 0, 0.15);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 25px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 12px rgba(0, 255, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.setup:hover {
+  border-color: rgba(0, 255, 0, 0.35);
+  box-shadow: 0 0 20px rgba(0, 255, 0, 0.1);
+}
+
+.setup .title-card {
+  color: #00FF00;
+  font-weight: 600;
+  font-size: 18px;
+  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+}
+
+.setup-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.setup-list li {
+  color: #d3d3d3;
+  font-size: 14px;
+  margin: 8px 0;
+  display: flex;
+  align-items: center;
+  transition: color 0.3s ease;
+}
+
+.setup-list li:hover {
+  color: #ffffff;
+}
+
+.setup-list li i {
+  color: #00FF00;
+  margin-right: 10px;
+  font-size: 15px;
+  opacity: 0.9;
+
+  .logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+    transition: all 0.35s ease;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.2) inset;
+  }
+
+  .logo:hover img {
+    box-shadow: 0 0 35px rgba(0, 255, 0, 0.5) inset;
+    transform: scale(1.08);
+  }
+}
+
+  </style>
+</head>
+<body>
+  <!-- Canvas for particles (z-index 1) -->
+  <canvas id="particle-canvas" aria-hidden="true"></canvas>
+
+  <div class="wrap" role="main">
+    <header class="reveal" aria-label="Заголовок сайта">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">
+  <img src="https://media.ixbt.site/5zsPiJ22IejBxxhLadtQ6wvMj6A=/1200x1200/smart/https://ixbt.online/gametech/covers/2022/09/21/nova-filepond-7OuXqH.png" alt="Anarch1st" style="width:100%; height:100%; object-fit:cover; border-radius:10px;">
+</div>
+        <div>
+          <div class="title" id="site-title">Anarch1st</div>
+          <div class="sub muted">Архив · Личный профиль · atmospheric</div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- Left: biography card(s) -->
+      <section class="card reveal" id="bio" aria-labelledby="bio-heading">
+        <h2 class="title-card" id="bio-heading">Биография</h2>
+
+        <div class="bio-grid" id="bio-grid" role="list">
+          <!-- Each field (placeholder) -->
+          <div class="field" role="listitem">
+            <div class="icon" aria-hidden="true"><i class="fa-solid fa-user"></i></div>
+            <div class="meta">
+              <span class="label">ФИО</span>
+              <span class="value">Mechislav Leshchenko</span>
+            </div>
+          </div>
+
+          <div class="field" role="listitem">
+            <div class="icon"><i class="fa-solid fa-venus-mars"></i></div>
+            <div class="meta">
+              <span class="label">Пол</span>
+              <span class="value">Мужчина</span>
+            </div>
+          </div>
+
+          <div class="field" role="listitem">
+            <div class="icon"><i class="fa-solid fa-cake-candles"></i></div>
+            <div class="meta">
+              <span class="label">Дата рождения</span>
+              <span class="value">2000-06-05 (25 лет)</span>
+            </div>
+          </div>
+
+          <div class="field" role="listitem">
+            <div class="icon"><i class="fa-solid fa-envelope"></i></div>
+            <div class="meta">
+              <span class="label">Email</span>
+              <span class="value">mechislav.leshchenko@gmail.com</span>
+            </div>
+          </div>
+
+          <div class="field" role="listitem">
+            <div class="icon"><i class="fa-solid fa-phone"></i></div>
+            <div class="meta">
+              <span class="label">Номер телефона</span>
+              <span class="value">(498) 886-9522</span>
+            </div>
+          </div>
+
+          <div class="field" role="listitem">
+            <div class="icon"><i class="fa-solid fa-location-dot"></i></div>
+            <div class="meta">
+              <span class="label">Адрес</span>
+              <span class="value">Avondale Ave, Milwaukee, Rhode Island, 49924</span>
+            </div>
+          </div>
+
+          <div class="field" role="listitem">
+            <div class="icon"><i class="fa-solid fa-flag"></i></div>
+            <div class="meta">
+              <span class="label">Страна</span>
+              <span class="value">United States</span>
+            </div>
+          </div>
+
+
+          <div class="field" role="listitem">
+            <div class="icon"><i class="fa-solid fa-user-tag"></i></div>
+            <div class="meta">
+              <span class="label">Username</span>
+              <span class="value">@Monolith_attack</span>
+            </div>
+          </div>
+
+          <div class="field" role="listitem">
+            <div class="icon"><i class="fa-brands fa-telegram"></i></div>
+            <div class="meta">
+              <span class="label">Telegram ID</span>
+              <span class="value">5499435631</span>
+            </div>
+          </div>
+
+          <div class="field" role="listitem">
+            <div class="icon"><i class="fa-solid fa-key"></i></div>
+            <div class="meta">
+              <span class="label">API ID</span>
+              <span class="value">26043145</span>
+            </div>
+          </div>
+
+          <div class="field" role="listitem">
+            <div class="icon"><i class="fa-solid fa-lock"></i></div>
+            <div class="meta">
+              <span class="label">API Hash</span>
+              <span class="value">0ebae8aea2266556f150ae70d3ff6055</span>
+            </div>
+          </div>
+
+          <div class="field" role="listitem">
+            <div class="icon"><i class="fa-solid fa-users"></i></div>
+            <div class="meta">
+              <span class="label">Clans</span>
+              <span class="value">No clan</span>
+            </div>
+          </div>
+
+          <div class="field" role="listitem">
+            <div class="icon"><i class="fa-solid fa-shield"></i></div>
+            <div class="meta">
+              <span class="label">Def</span>
+              <span class="value">No def</span>
+            </div>
+          </div>
+
+          <div class="field" role="listitem">
+            <div class="icon"><i class="fa-solid fa-chess-king"></i></i></div>
+            <div class="meta">
+              <span class="label">Каста</span>
+              <span class="value">Мирняк & Кодер</span>
+            </div>
+          </div>
+
+          <div class="field" role="listitem">
+            <div class="icon"><i class="fa-brands fa-linux"></i></i></div>
+            <div class="meta">
+              <span class="label">OС</span>
+              <span class="value">Kali linux</span>
+            </div>
+          </div>
+
+          <div class="field" role="listitem">
+            <div class="icon"><i class="fa-solid fa-globe"></i></i></div>
+            <div class="meta">
+              <span class="label">Browser</span>
+              <span class="value">Venator Red 2.0</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right: socials & about -->
+      <aside class="card reveal" aria-labelledby="about-heading">
+        <h3 class="title-card" id="about-heading">Контакты и социальные сети</h3>
+        <p class="lead muted">Связаться со мной можно через социальные сети ниже.</p>
+
+        <div class="socials" role="navigation" aria-label="Социальные сети">
+  <a class="s-btn green" href="https://t.me/Monolith_attack" target="_blank" aria-label="Telegram" title="Telegram">
+    <i class="fa-brands fa-telegram"></i>
+  </a>
+
+  <a class="s-btn orange" href="https://i.pinimg.com/736x/a2/36/20/a23620bbf4143ab4b90a462e59c25dad.jpg" target="_blank" aria-label="Instagram" title="Instagram">
+    <i class="fa-brands fa-instagram"></i>
+  </a>
+
+  <a class="s-btn blue" href="https://i.pinimg.com/736x/31/ee/84/31ee84c92f9e6ac5e86494c091904999.jpg" target="_blank" aria-label="Facebook" title="Facebook">
+    <i class="fa-brands fa-facebook"></i>
+  </a>
+
+  <a class="s-btn red" href="https://i.pinimg.com/736x/61/39/e2/6139e2340b8b2e08fb3a70f887269f8d.jpg" target="_blank" aria-label="YouTube" title="YouTube">
+    <i class="fa-brands fa-youtube"></i>
+  </a>
+</div>
+
+
+
+
+        <hr style="border:none;border-top:1px solid rgba(255,255,255,0.03);margin:14px 0">
+
+        <div>
+          <h4 class="muted" style="margin:0 0 8px 0">Краткое описание</h4>
+          <p class="muted" style="margin:0;font-size:.95rem">Номер который у меня используется в соц. сетях никак не связан с моим настоящем номером.</p>
+        </div>
+
+        <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn-primary" id="theme-toggle" aria-pressed="false" title="Toggle atmosphere">Сменить тему</button>
+        </div>
+
+        <section class="setup">
+  <h3 class="title-card">Технический сетап</h3>
+  <ul class="setup-list">
+    <li><i class="fa-solid fa-laptop-code"></i> ThinkPad X230 (modded)</li>
+    <li><i class="fa-solid fa-microchip"></i> Intel i7-3520M @ 3.6GHz</li>
+    <li><i class="fa-solid fa-memory"></i> 16GB RAM</li>
+    <li><i class="fa-solid fa-hard-drive"></i> 1TB SSD + Encrypted Partition</li>
+    <li><i class="fa-solid fa-wifi"></i> Secure Wi-Fi channel: WPA3</li>
+    <li><i class="fa-solid fa-terminal"></i> OS: Kali Linux</li>
+  </ul>
+</section>
+      </aside>
+
+
+      <!-- Optional: extra card for notes or archive -->
+      <section class="card reveal" aria-labelledby="notes-heading" style="grid-column:1/-1">
+        <h3 class="title-card" id="notes-heading">Про себя</h3>
+        <p class="muted" style="margin:6px 0 0 0">I have 1 year of experience in reverse and social engineering.</p>
+      </section>
+    </main>
+
+    <footer class="reveal" role="contentinfo">
+      <div>© <span id="year"></span> Биография — Личный архив</div>
+      <div class="muted">Создано для личного использования · <a href="https://t.me/Monolith_attack" class="footer-link" target="_blank">Контакты</a></div>
+    </footer>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+  /* ===========
+     Utilities & init
+     =========== */
+  (function(){
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Fade-in stagger reveal
+    function revealStagger(){
+      const els = document.querySelectorAll('.reveal');
+      els.forEach((el,i)=>{
+        if(prefersReduced){
+          el.classList.add('visible');
+          return;
+        }
+        // small stagger
+        setTimeout(()=> el.classList.add('visible'), 300 + i*120);
+      });
+    }
+
+    // Smooth scroll for internal links
+    function enableSmoothScroll(){
+      document.documentElement.style.scrollBehavior = 'smooth';
+      // optional easing polyfill: keep native for simplicity
+    }
+
+    // Set year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Social buttons: ripple + placeholder link open
+    document.querySelectorAll('.s-btn').forEach(btn=>{
+      btn.addEventListener('click', (e)=>{
+        // ripple
+        const rect = btn.getBoundingClientRect();
+        const circle = document.createElement('span');
+        const size = Math.max(rect.width, rect.height);
+        circle.style.width = circle.style.height = size + 'px';
+        circle.style.position = 'absolute';
+        circle.style.borderRadius = '50%';
+        circle.style.left = (e.clientX - rect.left - size/2) + 'px';
+        circle.style.top = (e.clientY - rect.top - size/2) + 'px';
+        circle.style.background = 'rgba(255,255,255,0.06)';
+        circle.style.transform = 'scale(0)';
+        circle.style.opacity = '1';
+        circle.style.pointerEvents='none';
+        circle.style.transition = 'transform .5s ease, opacity .6s ease';
+        btn.appendChild(circle);
+        requestAnimationFrame(()=> circle.style.transform = 'scale(1.6)');
+        setTimeout(()=> circle.style.opacity = '0', 260);
+        setTimeout(()=> circle.remove(), 700);
+
+        // open placeholder (in new tab) - user should replace data-href
+        const href = btn.getAttribute('data-href') || '#';
+        if(href && href !== '#'){
+          window.open(href, '_blank', 'noopener');
+        } else {
+          // small feedback: flash
+          btn.animate([{boxShadow:'0 0 18px rgba(255,255,255,0.02)'},{boxShadow:'0 0 18px rgba(255,255,255,0.08)'}], {duration:220,iterations:1});
+        }
+      });
+    });
+
+    // Theme toggle - just demonstration: toggle accent color usage (keeps style minimal)
+    const themeBtn = document.getElementById('theme-toggle');
+    themeBtn?.addEventListener('click', ()=>{
+      const pressed = themeBtn.getAttribute('aria-pressed') === 'true';
+      themeBtn.setAttribute('aria-pressed', String(!pressed));
+      document.body.style.backgroundColor = pressed ? 'var(--bg-1)' : '#2E2E2E';
+      // subtle background shift
+      document.body.animate([{opacity:1},{opacity:.98},{opacity:1}], {duration:420});
+    });
+
+    // Subtle parallax effect for the overlay image (body::before emulate via translate)
+    if(!prefersReduced){
+      window.addEventListener('scroll', () => {
+        const y = window.scrollY * 0.08;
+        // apply transform to body::before via setting CSS var on root
+        document.body.style.setProperty('--bg-translate', y+'px');
+        // Since we can't directly target pseudo-element transform from JS easily,
+        // we adjust by changing background-position on body for subtle effect:
+        document.body.style.backgroundPosition = `center ${-y}px`;
+        // Also animate overlay slightly:
+        const before = document.querySelector('body::before');
+        // (no direct access) - handled by background position tweaks above
+      }, {passive:true});
+    }
+
+    // Initialize
+    revealStagger();
+    enableSmoothScroll();
+
+    // Particles: lightweight canvas fog/snow + occasional drift (no external libs)
+    (function initParticles(){
+      const c = document.getElementById('particle-canvas');
+      if(!c) return;
+      const ctx = c.getContext('2d');
+      let W = c.width = innerWidth;
+      let H = c.height = innerHeight;
+      const particles = [];
+      const count = Math.floor(Math.max(40, W/40)); // adjust density
+
+      function rand(min,max){ return Math.random()*(max-min)+min }
+
+      for(let i=0;i<count;i++){
+        particles.push({
+          x: Math.random()*W,
+          y: Math.random()*H,
+          r: rand(0.6,2.6),
+          vx: rand(-0.2,0.2),
+          vy: rand(0.2,1.2),
+          alpha: rand(0.06,0.28)
+        });
+      }
+
+      function resize(){
+        W = c.width = innerWidth;
+        H = c.height = innerHeight;
+      }
+      window.addEventListener('resize', resize, {passive:true});
+
+      let last = performance.now();
+      function loop(now){
+        const dt = Math.min(40, now-last);
+        last = now;
+        ctx.clearRect(0,0,W,H);
+        // subtle tint overlay for atmosphere
+        // draw particles
+        for(let p of particles){
+          p.x += p.vx * dt * 0.06;
+          p.y += p.vy * dt * 0.06;
+          // wrap
+          if(p.y > H + 10){ p.y = -10; p.x = Math.random()*W; }
+          if(p.x < -20) p.x = W + 20;
+          if(p.x > W+20) p.x = -20;
+          ctx.beginPath();
+          ctx.fillStyle = `rgba(180,200,200, ${p.alpha})`;
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+          ctx.fill();
+          // glow
+          ctx.beginPath();
+          ctx.fillStyle = `rgba(0,255,0, ${p.alpha*0.02})`;
+          ctx.arc(p.x, p.y, p.r*6, 0, Math.PI*2);
+          ctx.fill();
+        }
+        requestAnimationFrame(loop);
+      }
+
+      // pause animation if user prefers reduced motion
+      if(!prefersReduced) requestAnimationFrame(loop);
+    })();
+
+    // Accessibility: mark main region
+    document.querySelector('main')?.setAttribute('tabindex','-1');
+
+    // Performance note: for production, minify CSS/JS and optimize background image sizes.
+    // (We intentionally keep code readable here.)
+
+  })();
+  </script>
+</body>
+</html>
